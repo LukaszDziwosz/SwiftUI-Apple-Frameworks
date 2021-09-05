@@ -7,15 +7,21 @@
 
 import SwiftUI
 
-struct ContentView: View {
+struct FrameworkGridView: View {
+   
     var body: some View {
-        Text("Hello, world!")
-            .padding()
+        ZStack{
+            VStack{
+                Image("classkit")
+                
+                Text("CloudKit")
+            }
+        }
     }
 }
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        FrameworkGridView()
     }
 }
