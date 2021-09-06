@@ -11,25 +11,31 @@ struct FrameworkGridView: View {
 
     init(){
         UINavigationBar.appearance().titleTextAttributes = [
-            .font : UIFont.systemFont(ofSize: 30)
-        ]
+            .font : UIFont.systemFont(ofSize: 30)]
     }
-    let columns:[GridItem] = [GridItem(.flexible()),
-                              GridItem(.flexible()),
-                              GridItem(.flexible())
-    ]
+    
+    @StateObject var viewModel = FrameworkGridViewModel()
+    
+ 
    
     var body: some View {
         ZStack{
             NavigationView {
                 ScrollView {
-                    LazyVGrid(columns: columns){
+                    LazyVGrid(columns: viewModel.columns){
                         ForEach(MockData.frameworks, id: \.id){ framework in
                             FrameworkTitileView(framework: framework)
+                                .onTapGesture {
+                                    viewModel.selectedFramework = framework
+                                }
                         }
                     }
                 }
                 .navigationBarTitle("🍎 Frameworks", displayMode: .inline)
+                .sheet(isPresented: $viewModel.isShowingDetailView){
+                    FrameworkDetailView(framework: viewModel.selectedFramework ?? MockData.frameworks[1],
+                isShowingDetailView: $viewModel.isShowingDetailView)
+                }
             }
         }
     }
@@ -42,18 +48,4 @@ struct ContentView_Previews: PreviewProvider {
     }
 }
 
-struct FrameworkTitileView: View {
-    let framework: Framework
-    var body: some View {
-        VStack{
-            Image(framework.imageName)
-                .resizable()
-                .frame(width: 90, height: 90)
-            Text(framework.name)
-                .font(.title2)
-                .fontWeight(.semibold)
-                .scaledToFit()
-                .minimumScaleFactor(0.5)
-        }.padding()
-    }
-}
+
